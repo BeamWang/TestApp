@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 
 import { MapRoutingModule } from './map-routing.module';
 import { MapComponent } from './map.component';
+import {NgxEchartsModule } from 'ngx-echarts';
+import { HttpClientModule } from '@angular/common/http';
 
 
 @NgModule({
@@ -10,7 +12,9 @@ import { MapComponent } from './map.component';
     MapComponent],
   imports: [
     CommonModule,
-    MapRoutingModule
+    HttpClientModule,
+    MapRoutingModule,
+    NgxEchartsModule 
   ]
 })
 export class MapModule { }
