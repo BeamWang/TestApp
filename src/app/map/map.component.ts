@@ -2,6 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { EChartOption } from 'echarts';
 import * as echarts from 'echarts/lib/echarts';
 import { HttpClient } from '@angular/common/http';
+import { MapService } from '../services/map.service';
+import { AreaCctv, AreaCctvItem } from '../entities/area-cctv';
+import { AreaCount } from '../entities/area-count';
+import { AreaItem } from '../entities/area-item';
 
 @Component({
   selector: 'app-map',
@@ -12,37 +16,38 @@ export class MapComponent implements OnInit {
   chartOption: EChartOption;
   mapOption: EChartOption;
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private mapService: MapService
+  ) { }
 
   ngOnInit(): void {
-    this.initMap();
-    // this.testChart();
+    this.mapService.getAutoCounts().then((data: AreaCctv) => {
+
+      this.initMap(data);
+    });
   }
-  testChart() {
-    this.chartOption = {
-      xAxis: {
-        type: 'category',
-        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-      }, yAxis: {
-        type: 'value'
-      }, series: [{
-        data: [820, 932, 901, 934, 1290, 1330, 1320],
-        type: 'line'
-      }]
-    }
+  formatData(areaTree: AreaCctvItem[]): any {
+    let formatValue: AreaItem[] = [];
+    areaTree.forEach(areaCctvItem => {
+      if (areaCctvItem.name === '中国') {
+        areaCctvItem.children.forEach(cityItem => {
+          formatValue.push(new AreaItem(cityItem.name, cityItem.total.confirm));
+        });
+      }
+    });
+
+    return formatValue;
   }
 
-  initMap() {
-
-    this.http.get('assets/map/china.json')
-      .subscribe(geoJson => {
+  initMap(data:AreaCctv) {
+    this.mapService.getChinaGeoJson()
+      .then(geoJson => {
         echarts.registerMap('China', geoJson);
         this.mapOption = {
-
-          backgroundColor: '#96aec7',
+          backgroundColor:'#D2E4E8',
           title: {
             text: '新型冠状病毒全国分布图',
-            subtext: '数据来自央视频疫情二十四小时',
+            subtext: '数据来自央视频疫情二十四小时,最新时间：'+data.lastUpdateTime,
             sublink: 'https://m.yangshipin.cn/static/2020/c0126.html?ptag=4_1.1.1.20239_wxf&tab=news_list'
           },
           tooltip: {
@@ -60,15 +65,27 @@ export class MapComponent implements OnInit {
               saveAsImage: {}
             }
           },
+          // visualMap: {
+          //   min: 0,
+          //   max: 50,
+          //   text: ['High', 'Low'],
+          //   realtime: false,
+          //   calculable: true,
+          //   inRange: {
+          //     color: ['#ADCDEF', '#2171C1']
+          //   }
+          // },
           visualMap: {
-            min: 0,
-            max: 50,
-            text: ['High', 'Low'],
-            realtime: false,
-            calculable: true,
-            inRange: {
-              color: ['#ADCDEF', '#2171C1']
-            }
+            x: 'left',
+            y: 'bottom',
+            splitList: [
+              { start: 10000, label: '>10000人以上', color: '#660000' },
+              { start: 1000, end: 9999, label: '1000-10000人', color: '#AA0000' },
+              { start: 100, end: 999, label: '100-1000人', color: '#D73E18' },
+              { start: 10, end: 99, label: '10-99人', color: '#ED7457' },
+              { start: 1, end: 9, label: '1-9人', color: '#84bf96' },
+              { start: 0, end: 0, label: '0人', color: '#fff' }
+            ]
           },
           series: [
             {
@@ -78,7 +95,7 @@ export class MapComponent implements OnInit {
               itemStyle: {
                 normal: {
                   areaColor: '#AAD5FF',
-                  borderColor: 'white',
+                  borderColor: '#ccc',
                   label: { show: true, color: 'white' }
                 },
                 emphasis: {
@@ -86,39 +103,7 @@ export class MapComponent implements OnInit {
                 }
               },
               zoom: 1.2,
-              data: [
-                { name: '北京', value: 0 },
-                { name: '天津', value: 0 },
-                { name: '重庆', value: 0 },
-                { name: '上海', value: 0 },
-                { name: '湖南', value: 0 },
-                { name: '广东', value: 20 },
-                { name: '福建', value: 0 },
-                { name: '江西', value: 0 },
-                { name: '四川', value: 0 },
-                { name: '广西', value: 0 },
-                { name: '新疆', value: 0 },
-                { name: '西藏', value: 0 },
-                { name: '青海', value: 0 },
-                { name: '甘肃', value: 0 },
-                { name: '宁夏', value: 0 },
-                { name: '内蒙古', value: 0 },
-                { name: '海南', value: 0 },
-                { name: '山西', value: 0 },
-                { name: '陕西', value: 0 },
-                { name: '云南', value: 0 },
-                { name: '贵州', value: 0 },
-                { name: '湖北', value: 0 },
-                { name: '浙江', value: 0 },
-                { name: '安徽', value: 0 },
-                { name: '河南', value: 0 },
-                { name: '山东', value: 0 },
-                { name: '江苏', value: 0 },
-                { name: '河北', value: 0 },
-                { name: '辽宁', value: 0 },
-                { name: '吉林', value: 0 },
-                { name: '黑龙江', value: 0 },
-                { name: '台湾', value: 0 }]
+              data: this.formatData(data.areaTree)
             }
           ]
         };

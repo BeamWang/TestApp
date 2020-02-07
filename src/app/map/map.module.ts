@@ -15,6 +15,7 @@ import { HttpClientModule } from '@angular/common/http';
     HttpClientModule,
     MapRoutingModule,
     NgxEchartsModule 
-  ]
+  ],
+  providers:[]
 })
 export class MapModule { }
