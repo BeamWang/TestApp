@@ -18,7 +18,7 @@ export class MapService {
   }
 
   getWebCounts() {
-    let url = `https://sapi.yangshipin.cn/api/x/cctv/area_counts.json?date=${new Date().getTime}`;
+    let url = `https://sapi.yangshipin.cn/api/x/cctv/area_counts.json?date=${new Date().getTime()}`;
     return this.http.get(url).toPromise();
   }
 
