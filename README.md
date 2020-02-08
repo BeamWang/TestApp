@@ -34,7 +34,7 @@ export class AppModule { }
  
  # 测试相关[https://blog.csdn.net/wf19930209/article/details/80413904]
  ## 单元测试
- ### 基础
+ ### 前言
     jasmine-core:Jasmine是我们将用来创建测试的框架。它有许多功能可以让我们编写不同类型的测试。
     karma:Karma是我们测试的任务跑步者。它使用配置文件来设置启动文件，报告，测试框架，浏览器等等。
 
@@ -46,7 +46,7 @@ export class AppModule { }
         每个测试用例内包括多个 断言（expectation） 来测试需要测试的代码，只要任何一个 expectation 结果为 false 就表示该测试用例为失败状态。
 
      expect：断言
-     
+
         常用断言方法
         toBe() 等同 ===
         toNotBe() 等同 !==
@@ -74,6 +74,47 @@ export class AppModule { }
      afterAll 
 
      async：异步的目的是让所有可能的异步代码在继续之前完成？？？
+
+     - detectChanges 
+     在测试中的Angular变化检测。每个测试程序都通过调用fixture.detectChanges()来通知Angular执行变化检测。 
+     - By 
+     By类是Angular测试工具之一，它生成有用的predicate。 它的By.css静态方法产生标准CSS选择器 predicate，与JQuery选择器相同的方式过滤。
+     - spy
+     刺探：spyOn(组件，事件名称);
+     执行click事件
+     断言：expect(comp.onSubmit).toHaveBeenCalledTimes(0);
+
+### Mock
+
+在实际的组件测试中发现组件往往依赖于服务。而服务又依赖于外部资源如http交互、本地资源等。为了屏蔽外部依赖方便组件的测试，可以对服务进行mock。对于服务的mock方式有两种：伪造服务实例（提供服务复制品）、刺探真实服务。这两种方式都能够达到mock的效果，我们可以挑选一种最适合自己当前测试文件的测试方式来进行测试。
+#### Mock服务实例
+第一步：编写服务的mock类
+```ts
+class TaskMonitorStubService extends TaskMonitorService {
+    public queryTaskList(request: ViewTaskRequest): Observable<any> {
+        return request.code === -1 ? Observable.of(runningTaskResponse): Observable.of(finishedTashResponse)
+    }
+}
+```
+第二步：在configureTestingModule用Mock的服务替换真实的服务
+```ts
+TestBed.configureTestingModule({
+    imports: [
+        HttpModule,
+        TaskMonitorModule
+    ],
+    Providers: [
+        {provide: TaskMonitorService, useClass: TaskMonitorStubService}
+    ]
+})
+```
+#### 刺探真实服务
+
+Angular的服务都是通过注入器注入到系统中的，同样我们可以从根TestBed获取到注入服务的实例，然后结合刺探（Spy）对真实的服务的方法进行替换.
+```
+let taskMonitorService: TaskMonitorService = TestBe.get(TaskMonitorService);
+spyOn(taskMonitorService, 'queryTaskList').and.returnValue(Observable.of(runningTaskResponse));
+```
 
 ### 执行测试命令
 ```

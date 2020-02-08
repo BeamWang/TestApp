@@ -38,7 +38,9 @@ describe('MapComponent套件', () => {
   });
 
   it('正确引用MapService', () => {
-    expect(component).toBeTruthy();
+    let client=TestBed.get(HttpClient);
+    let mapService:MapService=TestBed.get(MapService);
+    expect(mapService).toBeTruthy();
   });
 
 
