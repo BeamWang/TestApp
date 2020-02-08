@@ -24,7 +24,7 @@ module.exports = function (config) {
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
-    autoWatch: true,
+    autoWatch: true, //如果设置为true，则测试将以Watch模式运行。如果您更改任何测试并保存文件，测试将重新生成并重新运行。
     browsers: ['Chrome'],
     singleRun: false,
     restartOnFileChange: true
