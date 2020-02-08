@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { EChartOption } from 'echarts';
 import * as echarts from 'echarts/lib/echarts';
-import { HttpClient } from '@angular/common/http';
 import { MapService } from '../services/map.service';
 import { AreaCctv, AreaCctvItem } from '../entities/area-cctv';
-import { AreaCount } from '../entities/area-count';
 import { AreaItem } from '../entities/area-item';
 
 @Component({

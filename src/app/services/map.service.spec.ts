@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
 import { MapService } from './map.service';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('MapService', () => {
   let service: MapService;
@@ -10,7 +11,7 @@ describe('MapService', () => {
     service = TestBed.inject(MapService);
   });
 
-  it('should be created', () => {
+  it('创建实例', () => {
     expect(service).toBeTruthy();
   });
 });
