@@ -4,4 +4,29 @@
 <!-- <div echarts  [options]="chartOption"  style="width:600px;height:400px;"></div> -->
 
 
+<table style="width: 600px;">
+    <thead title="">
+        <tr>
+            <th rowspan="2"> 名称</th>
+            <th colspan="2" > 总数</th>
+            <th colspan="2"> 今日新增</th>
+        </tr>
+        <tr>
+            <th > 确诊</th>
+            <th > 疑似</th>
+            <th > 确诊</th>
+            <th > 疑似</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let area of chinaDatas">
+            <td> {{area.name }}</td> 
+            <td> {{area.total?.confirm }}</td>
+            <td> {{area.total?.suspect }}</td>
+            <td> {{area.today?.confirm }}</td>
+            <td> {{area.today?.suspect }}</td>
+        </tr>
+    </tbody>
+</table>
+
 

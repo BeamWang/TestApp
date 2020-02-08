@@ -14,6 +14,8 @@ export class MapComponent implements OnInit {
   chartOption: EChartOption;
   mapOption: EChartOption;
   data:AreaCctv;
+  chinaDatas:AreaCctvItem[]=[];
+  
 
   constructor(
     private mapService: MapService
@@ -25,11 +27,12 @@ export class MapComponent implements OnInit {
       this.initMap(data);
     });
   }
-  formatData(areaTree: AreaCctvItem[]): any {
+  formatChinaData(areaTree: AreaCctvItem[]): any {
     let formatValue: AreaItem[] = [];
     areaTree.forEach(areaCctvItem => {
       if (areaCctvItem.name === '中国') {
         areaCctvItem.children.forEach(cityItem => {
+          this.chinaDatas.push(cityItem);
           formatValue.push(new AreaItem(cityItem.name, cityItem.total.confirm));
         });
       }
@@ -102,7 +105,7 @@ export class MapComponent implements OnInit {
                 }
               },
               zoom: 1.2,
-              data: this.formatData(data.areaTree)
+              data: this.formatChinaData(data.areaTree)
             }
           ]
         };
