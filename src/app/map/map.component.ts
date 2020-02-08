@@ -15,6 +15,7 @@ import { AreaItem } from '../entities/area-item';
 export class MapComponent implements OnInit {
   chartOption: EChartOption;
   mapOption: EChartOption;
+  data:AreaCctv;
 
   constructor(
     private mapService: MapService
@@ -22,7 +23,7 @@ export class MapComponent implements OnInit {
 
   ngOnInit(): void {
     this.mapService.getAutoCounts().then((data: AreaCctv) => {
-
+      this.data=data;
       this.initMap(data);
     });
   }
