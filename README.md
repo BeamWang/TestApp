@@ -32,7 +32,7 @@ export class AppModule { }
 <div echarts [options]="chartOption"></div>
 ```
  
- # 测试相关[https://blog.csdn.net/wf19930209/article/details/80413904]
+ # 测试相关[https://angular.cn/guide/testing#testing]
  ## 单元测试
  ### 前言
     jasmine-core:Jasmine是我们将用来创建测试的框架。它有许多功能可以让我们编写不同类型的测试。
